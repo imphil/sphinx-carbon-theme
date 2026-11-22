@@ -43,5 +43,9 @@ class AssetsBuildHook(BuildHookInterface):
             )
             raise RuntimeError(msg)
         if not (ROOT / "node_modules").is_dir():
-            subprocess.run([npm, "ci", "--no-fund", "--no-audit"], cwd=ROOT, check=True)
+            # --ignore-scripts: the build needs no install scripts, and it
+            # skips the Carbon packages' telemetry postinstall.
+            subprocess.run(
+                [npm, "ci", "--ignore-scripts", "--no-fund", "--no-audit"], cwd=ROOT, check=True
+            )
         subprocess.run([npm, "run", "build"], cwd=ROOT, check=True)

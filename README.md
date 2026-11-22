@@ -53,6 +53,31 @@ The compiled assets (`src/sphinx_carbon_theme/theme/carbon/static/` and
 `partials/icons/`) are git-ignored and shipped in the wheel. Building a wheel
 runs `npm run build` through a hatch build hook if they are missing.
 
+### CI and releases
+
+`.github/workflows/ci.yml` builds the sdist and wheel once, tests the wheel
+against the oldest supported and current Sphinx releases (and Sphinx `main`,
+non-blocking), and on a `v*` tag publishes those same files to PyPI.
+
+To release, tag and push; the version comes from the tag:
+
+```console
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+Publishing uses [PyPI trusted publishing](https://docs.pypi.org/trusted-publishers/),
+so no API token is stored. One-time setup:
+
+1. On PyPI, add a trusted publisher for project `sphinx-carbon-theme`
+   (as a "pending publisher" before the first release): owner `imphil`,
+   repository `sphinx-carbon-theme`, workflow `ci.yml`, environment `pypi`.
+2. On GitHub, create the environment `pypi` (Settings → Environments).
+   Optionally add yourself as a required reviewer so each upload needs a click.
+
+Dependabot (`.github/dependabot.yml`) proposes updates to the Carbon packages,
+build tools and the pinned actions.
+
 ### Updating Carbon
 
 Bump the `@carbon/*` versions in `package.json`, run `npm install && npm run

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 from functools import cache
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -13,7 +14,10 @@ if TYPE_CHECKING:
     from docutils.nodes import document
     from sphinx.application import Sphinx
 
-__version__ = "0.1.0.dev0"
+try:
+    __version__ = version("sphinx-carbon-theme")
+except PackageNotFoundError:  # running from a source tree without installing
+    __version__ = "0.0.0"
 
 THEME_PATH = Path(__file__).parent / "theme" / "carbon"
 

@@ -1,0 +1,141 @@
+# Build the theme once, test the built wheel against several Sphinx versions,
+# and publish exactly those files to PyPI when a version tag (v*) is pushed.
+#
+# Releasing: push a tag such as v0.2.0. The package version comes from the
+# tag (hatch-vcs). Publishing uses PyPI trusted publishing; no API token.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+env:
+  FORCE_COLOR: "1"
+
+jobs:
+  build:
+    name: Build distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # hatch-vcs derives the version from git tags
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          # No dependency caches in the job whose output gets published
+          # (cache poisoning); npm ci is fast enough without.
+          package-manager-cache: false
+
+      - name: Build theme assets
+        run: |
+          npm ci --ignore-scripts --no-fund --no-audit
+          npm run build
+
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+        with:
+          enable-cache: false
+
+      - name: Build sdist and wheel
+        run: uv build
+
+      - name: Check distributions
+        run: |
+          uvx twine check --strict dist/*
+          # The compiled assets are git-ignored; make sure they were packaged.
+          python3 - <<'EOF'
+          import glob, zipfile
+          names = zipfile.ZipFile(glob.glob("dist/*.whl")[0]).namelist()
+          base = "sphinx_carbon_theme/theme/carbon/"
+          required = [
+              base + "static/scripts/carbon-sphinx.js",
+              base + "static/styles/carbon-sphinx.css",
+              base + "static/fonts/plex.css",
+              base + "partials/icons/search.svg",
+          ]
+          missing = [r for r in required if r not in names]
+          assert not missing, f"missing from wheel: {missing}"
+          assert not [n for n in names if n.endswith(".map")], "source maps in wheel"
+          print(f"wheel OK ({len(names)} files)")
+          EOF
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  test:
+    name: Test (Python ${{ matrix.python }}, Sphinx ${{ matrix.sphinx }})
+    needs: build
+    runs-on: ubuntu-latest
+    # Sphinx's development branch is an early warning, not a merge blocker.
+    continue-on-error: ${{ matrix.sphinx == 'main' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Oldest supported Sphinx on the oldest supported Python.
+          - { python: "3.10", sphinx: "8.0" }
+          - { python: "3.12", sphinx: "8.2" }
+          - { python: "3.13", sphinx: "9.2" }
+          - { python: "3.14", sphinx: "main" }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist/
+
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install the built wheel and test dependencies
+        env:
+          SPHINX_VERSION: ${{ matrix.sphinx }}
+        run: |
+          if [ "$SPHINX_VERSION" = "main" ]; then
+            sphinx="sphinx @ git+https://github.com/sphinx-doc/sphinx"
+          else
+            sphinx="sphinx==$SPHINX_VERSION.*"
+          fi
+          uv venv
+          uv pip install dist/*.whl "$sphinx" --group test
+
+      - name: Run tests
+        run: .venv/bin/pytest -p no:cacheprovider
+
+  publish:
+    name: Publish to PyPI
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/sphinx-carbon-theme/
+    permissions:
+      id-token: write # trusted publishing
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist/
+
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3

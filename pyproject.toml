@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.27"]
+requires = ["hatchling>=1.27", "hatch-vcs>=0.4"]
 build-backend = "hatchling.build"
 
 [project]
@@ -26,7 +26,13 @@ test = ["pytest>=8", "beautifulsoup4>=4.12"]
 docs = ["sphinx-autobuild"]
 
 [tool.hatch.version]
-path = "src/sphinx_carbon_theme/__init__.py"
+# Version from the git tag (v1.2.3 -> 1.2.3); see .github/workflows/ci.yml.
+source = "vcs"
+fallback-version = "0.0.0"
+
+[tool.hatch.version.raw-options]
+# PyPI rejects local versions (+g<hash>); dev builds get .devN only.
+local_scheme = "no-local-version"
 
 [tool.hatch.build]
 # The compiled assets are git-ignored but must be shipped.

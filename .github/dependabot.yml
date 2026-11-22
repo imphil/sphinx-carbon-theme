@@ -1,0 +1,21 @@
+# Keeps the Carbon packages, build tools and pinned GitHub Actions current.
+# After a Carbon update, review the kitchen-sink pages before merging.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      carbon:
+        patterns: ["@carbon/*", "@ibm/*"]
+      build-tools:
+        patterns: ["esbuild", "sass"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
