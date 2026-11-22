@@ -1,0 +1,24 @@
+{#- Shared template macros. -#}
+
+{#- Inline a Carbon icon (copied from @carbon/icons at theme build time). -#}
+{%- macro icon(name, class="", attrs="") -%}
+  {%- set svg -%}{% include "partials/icons/" ~ name ~ ".svg" %}{%- endset -%}
+  {%- set extra = (' class="' ~ class ~ '"' if class else '') ~ (' ' ~ attrs if attrs else '') -%}
+  {{- svg|trim|replace("<svg ", "<svg" ~ extra ~ " ", 1) -}}
+{%- endmacro -%}
+
+{#- Copyright line(s), same wording as basic/layout.html (keeps translations). -#}
+{%- macro copyright_lines() -%}
+  {%- if hasdoc('copyright') %}
+    {%- set copyright_prefix = '<a href="' + pathto('copyright') + '">' + _('Copyright') + '</a>' -%}
+  {%- else %}
+    {%- set copyright_prefix = _('Copyright') %}
+  {%- endif %}
+  {%- set lines = copyright if (copyright is iterable and copyright is not string) else [copyright] %}
+  {%- for copyright_line in lines %}
+    {% trans trimmed copyright_prefix=copyright_prefix, copyright=copyright_line|e %}
+      &#169; {{ copyright_prefix }} {{ copyright }}.
+    {% endtrans %}
+    {%- if not loop.last %}<br/>{%- endif %}
+  {%- endfor %}
+{%- endmacro -%}

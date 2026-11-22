@@ -1,0 +1,7 @@
+{#- "On this page": Sphinx's local toc, sticky next to the article. Like the
+    Carbon website, the list has no visible heading; the label is for
+    assistive technology. -#}
+<aside class="carbon-toc" aria-labelledby="carbon-toc-title" data-depth="{{ theme_toc_depth|e }}">
+  <h2 class="carbon-visually-hidden" id="carbon-toc-title">{{ _("On this page") }}</h2>
+  {{ toc }}
+</aside>

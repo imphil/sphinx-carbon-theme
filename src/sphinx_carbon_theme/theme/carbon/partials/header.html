@@ -1,0 +1,58 @@
+{%- from "partials/macros.html" import icon with context %}
+<cds-header aria-label="{{ project|e }}">
+  <cds-header-menu-button
+    button-label-active="{{ _('Close menu') }}"
+    button-label-inactive="{{ _('Open menu') }}"
+    collapse-mode="responsive"></cds-header-menu-button>
+  <cds-header-name href="{{ pathto(root_doc)|e }}" prefix="{{ theme_header_prefix|e }}">
+    {%- if logo_url %}<img class="carbon-header__logo" src="{{ logo_url|e }}" alt="{{ logo_alt|e }}" />{% endif -%}
+    {{ project|e }}
+  </cds-header-name>
+  {%- if carbon_header_links %}
+  <cds-header-nav menu-bar-label="{{ project|e }}">
+    {%- for link in carbon_header_links %}
+    <cds-header-nav-item href="{{ link.url|e }}">{{ link.name|e }}</cds-header-nav-item>
+    {%- endfor %}
+  </cds-header-nav>
+  {%- endif %}
+  <div class="carbon-header__global">
+    {%- if builder != "singlehtml" %}
+    <cds-header-global-action
+      data-carbon-search-toggle
+      panel-id="carbon-search-panel"
+      aria-label="{{ _('Search') }}"
+      tooltip-text="{{ _('Search') }}"
+      tooltip-alignment="end">
+      {{ icon("search", attrs='slot="icon"') }}
+    </cds-header-global-action>
+    {%- endif %}
+    {%- if theme_repository_url %}
+    {#- cds-header-global-action renders a <button>; a plain link styled as a header action instead. #}
+    <a class="carbon-header__action" href="{{ theme_repository_url|e }}"
+       aria-label="{{ _('Source repository') }}" title="{{ _('Source repository') }}">
+      {{- icon("logo--github") -}}
+    </a>
+    {%- endif %}
+    <cds-header-global-action
+      data-carbon-theme-toggle
+      aria-label="{{ _('Theme') }}"
+      tooltip-text="{{ _('Theme') }}"
+      tooltip-alignment="end">
+      <span slot="icon" class="carbon-theme-icons">
+        {{- icon("contrast", attrs='data-mode-icon="auto"') -}}
+        {{- icon("light", attrs='data-mode-icon="light" hidden') -}}
+        {{- icon("asleep", attrs='data-mode-icon="dark" hidden') -}}
+      </span>
+    </cds-header-global-action>
+  </div>
+  {%- if builder != "singlehtml" %}
+  <cds-header-panel id="carbon-search-panel" aria-label="{{ _('Search') }}">
+    <form class="carbon-header-search" action="{{ pathto('search')|e }}" method="get">
+      {%- with search_id = "carbon-header-search-input" %}
+      {%- include "partials/search-field.html" %}
+      {%- endwith %}
+      <p class="carbon-header-search__hint">{% trans %}Press <kbd>/</kbd> to search from anywhere.{% endtrans %}</p>
+    </form>
+  </cds-header-panel>
+  {%- endif %}
+</cds-header>

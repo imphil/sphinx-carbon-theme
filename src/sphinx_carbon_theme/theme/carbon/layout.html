@@ -1,0 +1,80 @@
+{#-
+  Carbon theme layout.
+
+  Extends Sphinx's own basic layout so that everything in <head> (metadata,
+  stylesheets, scripts, link tags) stays maintained by Sphinx. Only the page
+  body is replaced.
+-#}
+{%- extends "basic/layout.html" %}
+{%- from "partials/macros.html" import icon, copyright_lines with context %}
+
+{%- block scripts %}
+  {{- super() }}
+  <script type="module" src="{{ pathto('_static/scripts/carbon-sphinx.js', 1) }}{{ carbon_asset_query }}"></script>
+{%- endblock %}
+
+{%- block extrahead %}
+  <meta name="color-scheme" content="light dark" />
+  {{- super() }}
+{%- endblock %}
+
+{#- Apply the Carbon theme zone before first paint (see carbon-sphinx.js). -#}
+{%- block body_tag %}
+<body class="cds--{{ carbon_light_theme }}" data-light-theme="{{ carbon_light_theme }}" data-dark-theme="{{ carbon_dark_theme }}">
+  <script>
+    (function () {
+      var b = document.body, m = "auto";
+      try { m = localStorage.getItem("carbon-sphinx-mode") || "auto"; } catch (e) {}
+      var dark = m === "dark" || (m === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+      b.className = "cds--" + (dark ? b.dataset.darkTheme : b.dataset.lightTheme);
+      b.dataset.mode = m;
+      document.documentElement.style.colorScheme = dark ? "dark" : "light";
+    })();
+  </script>
+{%- endblock %}
+
+{%- block header %}
+  <a class="carbon-skip-link" href="#main-content">{{ _("Skip to main content") }}</a>
+  {%- include "partials/header.html" %}
+  {%- include "partials/sidenav.html" %}
+{%- endblock %}
+
+{%- block relbar1 %}{% endblock %}
+{%- block relbar2 %}{% endblock %}
+
+{%- block content %}
+  {%- set carbon_show_toc = theme_show_toc|tobool and display_toc %}
+  <div class="carbon-page">
+    <main id="main-content" class="carbon-main{% if carbon_show_toc %} carbon-main--with-toc{% endif %}">
+      <article class="carbon-article body">
+        {%- if theme_show_breadcrumbs|tobool and parents %}
+          {%- include "partials/breadcrumbs.html" %}
+        {%- endif %}
+        {%- block body %}{% endblock %}
+        {%- if theme_show_prev_next|tobool %}
+          {%- include "partials/pager.html" %}
+        {%- endif %}
+      </article>
+      {%- if carbon_show_toc %}
+        {%- include "partials/toc.html" %}
+      {%- endif %}
+    </main>
+    <footer class="carbon-footer">
+      {%- if show_copyright %}
+      <p>{{ copyright_lines() }}</p>
+      {%- endif %}
+      {%- if last_updated %}
+      <p>{% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}</p>
+      {%- endif %}
+      {%- if show_source and has_source and sourcename %}
+      <p><a href="{{ pathto('_sources/' + sourcename, true)|e }}" rel="nofollow">{{ _("Show source") }}</a></p>
+      {%- endif %}
+      {%- if show_sphinx %}
+      <p>{% trans sphinx_version=sphinx_version|e %}Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}</p>
+      {%- endif %}
+    </footer>
+  </div>
+  <template id="carbon-icon-chevron">{{ icon("chevron--down") }}</template>
+{%- endblock %}
+
+{%- block footer %}{% endblock %}

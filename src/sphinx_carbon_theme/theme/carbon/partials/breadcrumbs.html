@@ -1,0 +1,13 @@
+{#- Breadcrumbs, using the markup of the Carbon "breadcrumb" component. -#}
+<nav class="carbon-breadcrumb" aria-label="{{ _('Breadcrumb') }}">
+  <ol class="cds--breadcrumb cds--breadcrumb--no-trailing-slash">
+    <li class="cds--breadcrumb-item">
+      <a class="cds--link" href="{{ pathto(root_doc)|e }}">{{ project|e }}</a>
+    </li>
+    {%- for parent in parents %}
+    <li class="cds--breadcrumb-item">
+      <a class="cds--link" href="{{ parent.link|e }}">{{ parent.title }}</a>
+    </li>
+    {%- endfor %}
+  </ol>
+</nav>

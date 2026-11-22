@@ -1,0 +1,18 @@
+{#- Carbon search field (markup of the Carbon "search" component). Expects `search_id`. -#}
+{%- from "partials/macros.html" import icon with context %}
+<div class="cds--search cds--search--lg cds--layout--size-lg" role="search">
+  <div class="cds--search-magnifier" aria-hidden="true">
+    {{- icon("search", "cds--search-magnifier-icon") -}}
+  </div>
+  <label class="cds--label" for="{{ search_id }}">{{ _("Search") }}</label>
+  <input
+    class="cds--search-input"
+    id="{{ search_id }}"
+    type="search"
+    name="q"
+    placeholder="{{ _('Search the docs') }}"
+    autocomplete="off"
+    autocorrect="off"
+    autocapitalize="off"
+    spellcheck="false" />
+</div>

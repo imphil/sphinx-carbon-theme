@@ -1,0 +1,115 @@
+// Syntax highlighting for Pygments output, using Carbon palette colours.
+//
+// The theme sets Sphinx's pygments_style to "none", so these rules are the
+// only highlighting. Colours are custom properties per Carbon theme zone so
+// they switch with light/dark mode. A project that sets its own
+// ``pygments_style`` gets that style's pygments.css in addition; its
+// selectors are more specific than the :where() ones used here.
+
+@use '@carbon/styles/scss/colors' as *;
+
+.cds--white,
+.cds--g10 {
+  --carbon-syntax-comment: #{$gray-60};
+  --carbon-syntax-keyword: #{$purple-70};
+  --carbon-syntax-string: #{$green-70};
+  --carbon-syntax-number: #{$blue-70};
+  --carbon-syntax-function: #{$blue-60};
+  --carbon-syntax-class: #{$magenta-70};
+  --carbon-syntax-builtin: #{$cyan-70};
+  --carbon-syntax-decorator: #{$teal-70};
+  --carbon-syntax-attribute: #{$teal-60};
+  --carbon-syntax-error: #{$red-60};
+  --carbon-syntax-inserted: #{$green-60};
+}
+
+.cds--g90,
+.cds--g100 {
+  --carbon-syntax-comment: #{$gray-40};
+  --carbon-syntax-keyword: #{$purple-40};
+  --carbon-syntax-string: #{$green-30};
+  --carbon-syntax-number: #{$blue-40};
+  --carbon-syntax-function: #{$blue-30};
+  --carbon-syntax-class: #{$magenta-40};
+  --carbon-syntax-builtin: #{$cyan-30};
+  --carbon-syntax-decorator: #{$teal-30};
+  --carbon-syntax-attribute: #{$teal-40};
+  --carbon-syntax-error: #{$red-40};
+  --carbon-syntax-inserted: #{$green-40};
+}
+
+:where(.highlight) {
+  :where(.c, .c1, .ch, .cm, .cpf, .cs) {
+    color: var(--carbon-syntax-comment);
+    font-style: italic;
+  }
+
+  :where(.cp) {
+    color: var(--carbon-syntax-keyword);
+  }
+
+  :where(.k, .kc, .kd, .kn, .kp, .kr, .ow, .nt) {
+    color: var(--carbon-syntax-keyword);
+  }
+
+  :where(.kt, .nc, .nn, .ne) {
+    color: var(--carbon-syntax-class);
+  }
+
+  :where(.s, .s1, .s2, .sa, .sb, .sc, .sd, .sh, .sx, .dl) {
+    color: var(--carbon-syntax-string);
+  }
+
+  :where(.se, .si, .sr, .ss) {
+    color: var(--carbon-syntax-decorator);
+  }
+
+  :where(.m, .mb, .mf, .mh, .mi, .mo, .il, .no, .kc) {
+    color: var(--carbon-syntax-number);
+  }
+
+  :where(.nf, .fm) {
+    color: var(--carbon-syntax-function);
+  }
+
+  :where(.nb, .bp, .vm) {
+    color: var(--carbon-syntax-builtin);
+  }
+
+  :where(.nd, .ni, .nl) {
+    color: var(--carbon-syntax-decorator);
+  }
+
+  :where(.na, .nv, .vc, .vg, .vi) {
+    color: var(--carbon-syntax-attribute);
+  }
+
+  :where(.gp, .go) {
+    color: var(--cds-text-secondary);
+    user-select: none;
+  }
+
+  :where(.gp) {
+    font-weight: 600;
+  }
+
+  :where(.gh, .gu) {
+    font-weight: 600;
+  }
+
+  :where(.gd, .err, .gr, .gt) {
+    color: var(--carbon-syntax-error);
+  }
+
+  :where(.gi) {
+    color: var(--carbon-syntax-inserted);
+  }
+
+  :where(.ge) {
+    font-style: italic;
+  }
+
+  :where(.gs) {
+    font-weight: 600;
+  }
+}

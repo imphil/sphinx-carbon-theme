@@ -1,0 +1,225 @@
+// Site navigation (Sphinx toctree inside cds-side-nav), in-page TOC and
+// breadcrumbs. The toctree is plain HTML from Sphinx, styled to match
+// Carbon's side-nav links; it works at any depth and without JavaScript.
+
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/motion' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+
+// --------------------------------------------------------------- side nav
+
+.carbon-nav {
+  padding-bottom: $spacing-07;
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  li {
+    position: relative;
+  }
+
+  // Toctree captions become Carbon-style section labels.
+  .caption {
+    @include type.type-style('heading-compact-01');
+
+    padding: $spacing-05 $spacing-05 $spacing-03;
+    margin: 0;
+    color: $text-primary;
+
+    &:first-child {
+      padding-top: 0;
+    }
+  }
+
+  a {
+    @include type.type-style('body-compact-01');
+
+    position: relative;
+    display: flex;
+    min-height: 2rem;
+    align-items: center;
+    padding: $spacing-02 $spacing-05;
+    color: $text-secondary;
+    text-decoration: none;
+    transition:
+      background-color $duration-fast-01 motion(standard, productive),
+      color $duration-fast-01 motion(standard, productive);
+
+    &:hover {
+      background-color: $background-hover;
+      color: $text-primary;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $focus;
+      outline-offset: -2px;
+    }
+  }
+
+  // Indent by depth; Sphinx labels every entry with its toctree level.
+  @for $level from 2 through 6 {
+    .toctree-l#{$level} > a {
+      padding-inline-start: #{1 + ($level - 1)}rem;
+    }
+  }
+
+  li.current > a {
+    color: $text-primary;
+  }
+
+  a.current {
+    background-color: $background-selected;
+    color: $text-primary;
+    font-weight: 600;
+
+    &::before {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 3px;
+      background-color: $border-interactive;
+      content: '';
+    }
+  }
+}
+
+// Expand/collapse buttons are added by JavaScript.
+.carbon-nav__parent > a {
+  padding-inline-end: 2.5rem;
+}
+
+.carbon-nav__toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: 2.5rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: $icon-secondary;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $background-hover;
+    color: $icon-primary;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    transition: transform $duration-fast-02 motion(standard, productive);
+  }
+
+  &[aria-expanded='true'] svg {
+    transform: rotate(180deg);
+  }
+
+  &[aria-expanded='false'] + ul {
+    display: none;
+  }
+}
+
+// Header links repeated in the side nav on small screens.
+.carbon-nav-header-links {
+  border-bottom: 1px solid $border-subtle;
+  margin-bottom: $spacing-05;
+
+  @include breakpoint(lg) {
+    display: none;
+  }
+}
+
+// --------------------------------------------------------------- page toc
+
+.carbon-toc {
+  display: none;
+
+  @include breakpoint(xlg) {
+    position: sticky;
+    top: calc(var(--carbon-header-height) + #{$spacing-07});
+    display: block;
+    overflow-y: auto;
+    max-height: calc(100vh - var(--carbon-header-height) - #{$spacing-09});
+  }
+
+  // Matches the anchor-link column on carbondesignsystem.com: no visible
+  // heading, a continuous 4px rail, the current section marked in blue.
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  // The first level of Sphinx's local toc is the page title itself.
+  > ul > li > a {
+    display: none;
+  }
+
+  // The section list carries the rail.
+  > ul > li > ul {
+    border-inline-start: 4px solid $border-subtle-00;
+  }
+
+  a {
+    @include type.type-style('body-compact-01');
+
+    display: block;
+    padding: 0.4375rem $spacing-05;
+    margin-inline-start: -4px;
+    border-inline-start: 4px solid transparent;
+    color: $text-secondary;
+    text-decoration: none;
+    transition: color $duration-fast-01 motion(standard, productive);
+
+    &:hover {
+      color: $text-primary;
+    }
+
+    &.carbon-toc__active {
+      border-inline-start-color: $border-interactive;
+      color: $text-primary;
+      font-weight: 600;
+    }
+  }
+
+  // Deeper levels are indented inside the same rail.
+  ul ul ul a {
+    padding-inline-start: $spacing-07;
+  }
+
+  ul ul ul ul a {
+    padding-inline-start: $spacing-09;
+  }
+
+  // ``toc_depth`` option: how many heading levels below the title to show.
+  &[data-depth='1'] > ul > li > ul ul,
+  &[data-depth='2'] > ul > li > ul ul ul {
+    display: none;
+  }
+}
+
+// --------------------------------------------------------------- breadcrumbs
+
+.carbon-article .carbon-breadcrumb {
+  margin-bottom: $spacing-05;
+
+  ol {
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    margin-bottom: 0;
+  }
+}

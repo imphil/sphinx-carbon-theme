@@ -1,0 +1,74 @@
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/spacing' as *;
+
+:root {
+  // Layout constants shared by the shell, navigation and content partials.
+  --carbon-header-height: 3rem;
+  --carbon-sidenav-width: 16rem;
+  --carbon-toc-width: 14rem;
+  --carbon-content-max-width: 52rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%;
+  scroll-padding-top: calc(var(--carbon-header-height) + #{$spacing-05});
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  @include type.font-family('sans');
+  @include type.type-style('body-02');
+
+  margin: 0;
+  min-height: 100vh;
+  background-color: $background;
+  color: $text-primary;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 2px solid $focus;
+  outline-offset: -2px;
+}
+
+::selection {
+  background-color: $highlight;
+}
+
+.carbon-visually-hidden {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.carbon-skip-link {
+  @include type.type-style('body-compact-01');
+
+  position: absolute;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  padding: $spacing-04 $spacing-05;
+  background: $background-inverse;
+  color: $text-inverse;
+  transform: translateY(-100%);
+
+  &:focus {
+    transform: none;
+  }
+}

@@ -1,0 +1,118 @@
+// Code: Carbon code-snippet look for literal blocks, inline code snippet
+// look for inline literals.
+
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/spacing' as *;
+
+:is(code, kbd, pre, samp, .sig) {
+  @include type.font-family('mono');
+}
+
+.carbon-article {
+  // ------------------------------------------------------------ inline
+
+  code.literal,
+  :not(pre) > code {
+    @include type.type-style('code-02');
+
+    padding: 0 $spacing-02;
+    border-radius: 4px;
+    background: $layer-01;
+    color: $text-primary;
+  }
+
+  // Inline code inside links keeps the link colour.
+  a code.literal,
+  a > code {
+    background: none;
+    color: inherit;
+    padding: 0;
+  }
+
+  // ------------------------------------------------------------ blocks
+
+  div.highlight,
+  pre.literal-block,
+  pre.doctest-block {
+    margin: 0 0 $spacing-06;
+    background: $layer-01;
+  }
+
+  div[class*='highlight-'] {
+    margin: 0 0 $spacing-06;
+
+    div.highlight {
+      margin: 0;
+    }
+  }
+
+  pre {
+    @include type.type-style('code-02');
+
+    overflow-x: auto;
+    padding: $spacing-05;
+    margin: 0;
+    background: none;
+    color: $text-primary;
+    line-height: 1.5rem;
+    tab-size: 4;
+  }
+
+  pre.literal-block,
+  pre.doctest-block {
+    background: $layer-01;
+  }
+
+  // Highlighted lines (:emphasize-lines:).
+  .highlight .hll {
+    display: block;
+    margin: 0 calc(-1 * #{$spacing-05});
+    padding: 0 $spacing-05;
+    background-color: $highlight;
+  }
+
+  // Line numbers (:linenos:).
+  .highlight span.linenos,
+  .highlighttable .linenos pre {
+    padding-inline-end: $spacing-05;
+    color: $text-helper;
+    user-select: none;
+  }
+
+  table.highlighttable {
+    width: 100%;
+    margin: 0;
+    border-spacing: 0;
+    background: $layer-01;
+
+    td {
+      padding: 0;
+      border: 0;
+      background: none;
+    }
+
+    td.code {
+      width: 100%;
+    }
+  }
+
+  // Captions (``:caption:`` on code-block).
+  div.literal-block-wrapper {
+    margin: 0 0 $spacing-06;
+
+    div[class*='highlight-'],
+    div.highlight {
+      margin: 0;
+    }
+  }
+
+  .code-block-caption {
+    @include type.type-style('label-01');
+
+    padding: $spacing-03 $spacing-05;
+    border-bottom: 1px solid $border-subtle;
+    background: $layer-accent-01;
+    color: $text-secondary;
+  }
+}

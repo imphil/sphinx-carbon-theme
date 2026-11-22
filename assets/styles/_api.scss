@@ -1,0 +1,108 @@
+// API reference (Sphinx domain object descriptions: autodoc etc.).
+
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/spacing' as *;
+
+.carbon-article {
+  // Object descriptions carry the domain and object type as classes,
+  // e.g. <dl class="py class">.
+  dl:is(.py, .c, .cpp, .js, .rst, .std):not(.field-list) {
+    margin-bottom: $spacing-07;
+
+    > dd {
+      margin-inline-start: $spacing-07;
+      margin-top: $spacing-05;
+    }
+  }
+
+  dt.sig {
+    @include type.type-style('code-02');
+
+    position: relative;
+    padding: $spacing-03 $spacing-05;
+    border-inline-start: 3px solid $border-interactive;
+    background: $layer-01;
+    color: $text-primary;
+    overflow-wrap: anywhere;
+    scroll-margin-top: calc(var(--carbon-header-height) + #{$spacing-05});
+
+    // Nested members get a quieter signature.
+    dd & {
+      border-inline-start-color: $border-strong;
+    }
+
+    :is(.sig-name, .descname) {
+      font-weight: 600;
+    }
+
+    :is(.sig-prename, .descclassname) {
+      color: $text-secondary;
+    }
+
+    em.property,
+    .property {
+      color: var(--carbon-syntax-keyword);
+      font-style: normal;
+    }
+
+    em.sig-param {
+      font-style: normal;
+    }
+
+    .sig-param .n:first-child {
+      color: $text-primary;
+    }
+
+    .default_value {
+      color: var(--carbon-syntax-string);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    a:hover {
+      color: $link-primary-hover;
+    }
+
+    .viewcode-link,
+    .reference.external {
+      @include type.type-style('label-01');
+      @include type.font-family('sans');
+
+      float: right;
+      margin-inline-start: $spacing-05;
+      color: $link-primary;
+    }
+  }
+
+  // Multi-line signatures (``maximum_signature_line_length``).
+  dl.sig-object,
+  dt.sig > dl {
+    margin: 0;
+  }
+
+  // "Parameters", "Returns", ... inside API docs.
+  dd dl.field-list {
+    margin-top: $spacing-05;
+  }
+
+  // Option/command line descriptions.
+  dl.option-list,
+  table.option-list {
+    kbd,
+    .option {
+      @include type.type-style('code-02');
+
+      border: 0;
+      background: none;
+      font-weight: 600;
+    }
+  }
+
+  // Cross-reference roles to Python objects in running text.
+  a.reference code.xref {
+    color: $link-primary;
+  }
+}

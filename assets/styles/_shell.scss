@@ -1,0 +1,174 @@
+// Page frame around the Carbon UI shell web components (cds-header,
+// cds-side-nav). The components style themselves; this file positions the
+// page content next to them and keeps the page usable before (or without)
+// JavaScript.
+
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/breakpoint' as *;
+@use '@carbon/styles/scss/motion' as *;
+
+// --------------------------------------------------------------- header
+
+cds-header {
+  // Header items (logo, project name) inherit header text colour.
+  .carbon-header__logo {
+    display: block;
+    height: 1.5rem;
+    width: auto;
+    margin-inline-end: $spacing-03;
+  }
+}
+
+cds-header-global-action svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+// Before the components are defined (or with JavaScript disabled) render a
+// plain bar so the page does not jump around.
+cds-header:not(:defined) {
+  position: fixed;
+  z-index: 8000;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  height: var(--carbon-header-height);
+  align-items: center;
+  padding: 0 $spacing-05;
+  border-bottom: 1px solid $border-subtle;
+  background: $background;
+
+  cds-header-menu-button,
+  cds-header-global-action,
+  cds-header-panel {
+    display: none;
+  }
+
+  cds-header-name {
+    @include type.type-style('body-compact-01');
+
+    font-weight: 600;
+  }
+
+  cds-header-nav {
+    display: flex;
+    gap: $spacing-05;
+    margin-inline-start: $spacing-07;
+  }
+}
+
+// ---------------------------------------------------------------- search panel
+
+cds-header-panel .carbon-header-search {
+  padding: $spacing-05;
+}
+
+.carbon-header-search__hint {
+  @include type.type-style('helper-text-01');
+
+  margin: $spacing-03 0 0;
+  color: $text-helper;
+
+  kbd {
+    @include type.type-style('code-01');
+  }
+}
+
+// --------------------------------------------------------------- side nav
+
+cds-side-nav:not(:defined) {
+  display: none;
+}
+
+// Without JavaScript, show the navigation in the page flow instead.
+@media (scripting: none) {
+  cds-side-nav:not(:defined) {
+    display: block;
+    margin-top: var(--carbon-header-height);
+    border-bottom: 1px solid $border-subtle;
+  }
+}
+
+// --------------------------------------------------------------- main area
+
+.carbon-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100vh;
+  padding-top: var(--carbon-header-height);
+
+  @include breakpoint(lg) {
+    margin-inline-start: var(--carbon-sidenav-width);
+  }
+}
+
+.carbon-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: $spacing-09;
+  width: 100%;
+  max-width: calc(var(--carbon-content-max-width) + var(--carbon-toc-width) + 2 * #{$spacing-09});
+  padding: $spacing-07 $spacing-05 $spacing-10;
+
+  @include breakpoint(md) {
+    padding-inline: $spacing-07;
+  }
+
+  @include breakpoint(lg) {
+    padding-inline: $spacing-09;
+  }
+
+  @include breakpoint(xlg) {
+    &.carbon-main--with-toc {
+      grid-template-columns: minmax(0, var(--carbon-content-max-width)) var(--carbon-toc-width);
+    }
+  }
+}
+
+.carbon-article {
+  min-width: 0;
+  max-width: var(--carbon-content-max-width);
+}
+
+.carbon-header__global {
+  display: flex;
+  height: 100%;
+  margin-inline-start: auto;
+}
+
+.carbon-theme-icons {
+  display: contents;
+}
+
+[data-mode-icon][hidden] {
+  display: none;
+}
+
+// Link styled like Carbon's header global action (which only renders buttons).
+.carbon-header__action {
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  align-items: center;
+  justify-content: center;
+  color: $icon-primary;
+  transition: background-color $duration-fast-02 motion(standard, productive);
+
+  &:hover {
+    background-color: $background-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $focus;
+    outline-offset: -2px;
+  }
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}

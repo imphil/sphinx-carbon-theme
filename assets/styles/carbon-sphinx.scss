@@ -1,0 +1,36 @@
+// Carbon Sphinx theme stylesheet.
+//
+// Everything visual comes from @carbon/styles: theme tokens (as CSS custom
+// properties, so light/dark switching is a class change), type styles,
+// spacing, motion, and a few component stylesheets used as-is. The partials
+// below only map Sphinx's HTML onto those tokens.
+
+@use '@carbon/styles/scss/config' with (
+  // Fonts are shipped with the theme (static/fonts/plex.css), never fetched
+  // from a CDN.
+  $css--font-face: false,
+  // Carbon's reset strips list bullets etc., which documentation content needs.
+  $css--reset: false
+);
+
+// Theme zones: .cds--white, .cds--g10, .cds--g90, .cds--g100.
+@use '@carbon/styles/scss/zone';
+
+// Layout size/density classes and tokens used by component styles below.
+@use '@carbon/styles/scss/layout';
+
+// Carbon components whose CSS classes the templates use directly.
+@use '@carbon/styles/scss/components/link';
+@use '@carbon/styles/scss/components/breadcrumb';
+@use '@carbon/styles/scss/components/search';
+
+@use 'base';
+@use 'shell';
+@use 'navigation';
+@use 'content';
+@use 'admonitions';
+@use 'code';
+@use 'tables';
+@use 'api';
+@use 'syntax';
+@use 'footer';

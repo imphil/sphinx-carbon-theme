@@ -1,0 +1,98 @@
+// Docutils tables styled after Carbon's data table.
+
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/spacing' as *;
+
+.carbon-article {
+  .carbon-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: $spacing-06;
+
+    > table {
+      margin-bottom: 0;
+    }
+  }
+
+  table.docutils {
+    @include type.type-style('body-compact-01');
+
+    width: 100%;
+    margin: 0 0 $spacing-06;
+    border: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    caption {
+      @include type.type-style('heading-compact-02');
+
+      padding: 0 0 $spacing-03;
+      color: $text-primary;
+      text-align: start;
+    }
+
+    th,
+    td {
+      padding: $spacing-04 $spacing-05;
+      border: 0;
+      text-align: start;
+      vertical-align: top;
+    }
+
+    thead th,
+    th.stub {
+      @include type.type-style('heading-compact-01');
+
+      background: $layer-accent-01;
+      color: $text-primary;
+    }
+
+    tbody td {
+      border-top: 1px solid $border-subtle;
+      background: $layer-01;
+      color: $text-secondary;
+    }
+
+    tbody tr:hover td {
+      background: $layer-hover-01;
+      color: $text-primary;
+    }
+
+    td > p:last-child,
+    th > p:last-child {
+      margin-bottom: 0;
+    }
+
+    td > :is(ul, ol) {
+      margin-bottom: 0;
+    }
+  }
+
+  // Autosummary tables are lists of links; keep them compact.
+  table.autosummary td {
+    padding-block: $spacing-03;
+  }
+
+  // Generated index pages.
+  table.indextable {
+    width: 100%;
+
+    td {
+      vertical-align: top;
+    }
+
+    ul {
+      padding-inline-start: $spacing-05;
+      list-style: none;
+    }
+  }
+
+  .genindex-jumpbox,
+  .modindex-jumpbox {
+    @include type.type-style('body-compact-02');
+
+    padding: $spacing-05 0;
+    border-block: 1px solid $border-subtle;
+    margin: $spacing-05 0 $spacing-07;
+  }
+}

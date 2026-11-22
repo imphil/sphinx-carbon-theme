@@ -1,0 +1,23 @@
+{%- from "partials/macros.html" import icon with context %}
+{%- if prev or next %}
+<nav class="carbon-pager" aria-label="{{ _('Previous and next page') }}">
+  {%- if prev %}
+  <a class="carbon-pager__link carbon-pager__link--prev" href="{{ prev.link|e }}" rel="prev">
+    <span class="carbon-pager__text">
+      <span class="carbon-pager__label">{{ _("Previous") }}</span>
+      <span class="carbon-pager__title">{{ prev.title }}</span>
+    </span>
+    {{ icon("arrow--left") }}
+  </a>
+  {%- endif %}
+  {%- if next %}
+  <a class="carbon-pager__link carbon-pager__link--next" href="{{ next.link|e }}" rel="next">
+    <span class="carbon-pager__text">
+      <span class="carbon-pager__label">{{ _("Next") }}</span>
+      <span class="carbon-pager__title">{{ next.title }}</span>
+    </span>
+    {{ icon("arrow--right") }}
+  </a>
+  {%- endif %}
+</nav>
+{%- endif %}

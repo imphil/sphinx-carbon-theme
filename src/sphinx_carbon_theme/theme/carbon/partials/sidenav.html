@@ -1,0 +1,23 @@
+{#-
+  Side navigation: Sphinx's toctree as plain nested lists inside Carbon's
+  side-nav shell. JavaScript adds expand/collapse buttons; the full tree is
+  usable without it.
+-#}
+<cds-side-nav aria-label="{{ _('Main navigation') }}" collapse-mode="responsive">
+  <cds-side-nav-items>
+    {%- if carbon_header_links %}
+    <ul class="carbon-nav carbon-nav-header-links">
+      {%- for link in carbon_header_links %}
+      <li><a href="{{ link.url|e }}">{{ link.name|e }}</a></li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+    <nav class="carbon-nav" aria-label="{{ _('Table of contents') }}">
+      {{- toctree(
+            collapse=theme_navigation_collapse|tobool,
+            maxdepth=theme_navigation_depth|toint,
+            includehidden=theme_navigation_include_hidden|tobool,
+            titles_only=true) }}
+    </nav>
+  </cds-side-nav-items>
+</cds-side-nav>

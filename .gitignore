@@ -1,0 +1,11 @@
+node_modules/
+build/
+dist/
+docs/_build/
+__pycache__/
+*.egg-info/
+.nox/
+.venv/
+# Compiled theme assets (built by `npm run build`, shipped in the wheel).
+src/sphinx_carbon_theme/theme/carbon/static/
+src/sphinx_carbon_theme/theme/carbon/partials/icons/

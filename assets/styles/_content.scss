@@ -1,0 +1,330 @@
+// Long-form documentation content: Carbon type scale, links, lists,
+// figures. Selectors target the HTML docutils/Sphinx emit.
+
+@use 'sass:map';
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/spacing' as *;
+@use 'carbon-icons' as icons;
+
+.carbon-article {
+  // ------------------------------------------------------------ headings
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    color: $text-primary;
+    scroll-margin-top: calc(var(--carbon-header-height) + #{$spacing-05});
+  }
+
+  h1 {
+    @include type.type-style('fluid-heading-05', true);
+
+    margin-bottom: $spacing-07;
+  }
+
+  h2 {
+    @include type.type-style('fluid-heading-04', true);
+
+    margin-top: $spacing-10;
+    margin-bottom: $spacing-05;
+  }
+
+  h3 {
+    @include type.type-style('fluid-heading-03', true);
+
+    margin-top: $spacing-09;
+    margin-bottom: $spacing-05;
+  }
+
+  h4 {
+    @include type.type-style('heading-02');
+
+    margin-top: $spacing-07;
+    margin-bottom: $spacing-03;
+  }
+
+  h5,
+  h6 {
+    @include type.type-style('heading-01');
+
+    margin-top: $spacing-06;
+    margin-bottom: $spacing-03;
+  }
+
+  // Sphinx's "¶" permalink: show a Carbon link icon on hover/focus.
+  a.headerlink {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    margin-inline-start: $spacing-03;
+    background-color: $link-primary;
+    color: transparent;
+    font-size: 0;
+    mask: map.get(icons.$icons, 'link') center / contain no-repeat;
+    opacity: 0;
+    vertical-align: middle;
+
+    &:focus-visible {
+      opacity: 1;
+    }
+  }
+
+  :is(h1, h2, h3, h4, h5, h6, dt, caption, .code-block-caption, p.rubric):hover > a.headerlink {
+    opacity: 1;
+  }
+
+  // ------------------------------------------------------------ text
+
+  p,
+  ul,
+  ol,
+  dl,
+  blockquote,
+  figure,
+  .line-block {
+    margin-top: 0;
+    margin-bottom: $spacing-06;
+  }
+
+  li > p,
+  dd > p {
+    margin-bottom: $spacing-03;
+  }
+
+  ul,
+  ol {
+    padding-inline-start: $spacing-07;
+  }
+
+  li {
+    margin-bottom: $spacing-02;
+  }
+
+  // Nested lists sit tight inside their parent item; the block spacing above
+  // only applies between top-level blocks.
+  li > :is(ul, ol) {
+    margin-top: $spacing-02;
+    margin-bottom: 0;
+  }
+
+  // docutils "simple" lists are already compact.
+  :is(ul, ol).simple > li > p {
+    margin-bottom: 0;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  a {
+    color: $link-primary;
+    text-decoration: none;
+
+    &:hover {
+      color: $link-primary-hover;
+      text-decoration: underline;
+    }
+
+    &:visited {
+      color: $link-primary;
+    }
+
+    &:focus-visible {
+      outline: 1px solid $focus;
+      outline-offset: 0;
+    }
+  }
+
+  hr {
+    height: 1px;
+    margin: $spacing-09 0;
+    border: 0;
+    background: $border-subtle;
+  }
+
+  blockquote {
+    padding-inline-start: $spacing-05;
+    border-inline-start: 3px solid $border-strong;
+    margin-inline: 0;
+    color: $text-secondary;
+  }
+
+  .epigraph,
+  .pull-quote {
+    @include type.type-style('fluid-quotation-01', true);
+
+    border: 0;
+    padding: 0;
+    color: $text-primary;
+  }
+
+  p.rubric {
+    @include type.type-style('heading-compact-02');
+
+    margin-top: $spacing-07;
+  }
+
+  .centered {
+    text-align: center;
+  }
+
+  // ------------------------------------------------------------ media
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  figure,
+  div.figure {
+    margin-inline: 0;
+  }
+
+  figcaption,
+  .caption {
+    @include type.type-style('helper-text-01');
+
+    margin-top: $spacing-03;
+    color: $text-secondary;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  // ------------------------------------------------------------ lists of terms
+
+  dl:not([class*=' ']):not(.field-list):not(.footnote):not(.citation):not(.option-list),
+  dl.simple,
+  dl.glossary {
+    dt {
+      font-weight: 600;
+    }
+
+    dd {
+      margin-inline-start: $spacing-07;
+      margin-bottom: $spacing-05;
+    }
+  }
+
+  dl.field-list {
+    display: grid;
+    grid-template-columns: fit-content(30%) auto;
+    gap: $spacing-03 $spacing-05;
+
+    > dt {
+      @include type.type-style('heading-compact-01');
+
+      padding-top: 0.1875rem;
+      color: $text-primary;
+    }
+
+    > dt::after {
+      content: none;
+    }
+
+    > dd {
+      margin: 0;
+
+      > ul {
+        padding-inline-start: 0;
+        list-style: none;
+      }
+    }
+  }
+
+  // Footnotes and citations.
+  :is(aside.footnote, div.citation) {
+    @include type.type-style('body-compact-01');
+
+    color: $text-secondary;
+  }
+
+  aside.footnote-list {
+    padding-top: $spacing-05;
+    border-top: 1px solid $border-subtle;
+    margin-top: $spacing-07;
+  }
+
+  // ------------------------------------------------------------ keyboard, gui
+
+  kbd {
+    @include type.type-style('code-01');
+
+    padding: 0 $spacing-02;
+    border: 1px solid $border-subtle;
+    border-bottom-width: 2px;
+    border-radius: 2px;
+    background: $layer-01;
+    white-space: nowrap;
+  }
+
+  .guilabel,
+  .menuselection {
+    @include type.type-style('label-01');
+
+    padding: 0 $spacing-02;
+    border: 1px solid $border-subtle;
+    background: $layer-01;
+  }
+
+  // ------------------------------------------------------------ toctree in page
+
+  .toctree-wrapper {
+    margin-bottom: $spacing-07;
+
+    .caption {
+      @include type.type-style('heading-compact-02');
+
+      color: $text-primary;
+    }
+  }
+}
+
+// Search page results.
+#search-results {
+  margin-top: $spacing-07;
+
+  h2 {
+    @include type.type-style('heading-03');
+
+    margin-top: 0;
+  }
+
+  ul.search {
+    padding: 0;
+    list-style: none;
+
+    li {
+      padding: $spacing-05 0;
+      border-bottom: 1px solid $border-subtle;
+      background: none;
+    }
+
+    li > a {
+      @include type.type-style('heading-compact-02');
+    }
+
+    p.context {
+      @include type.type-style('body-compact-01');
+
+      margin: $spacing-02 0 0;
+      color: $text-secondary;
+    }
+  }
+
+  .highlighted {
+    background-color: $highlight;
+  }
+}
+
+.carbon-search-form {
+  display: flex;
+  max-width: 36rem;
+  margin-bottom: $spacing-05;
+}

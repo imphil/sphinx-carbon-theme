@@ -1,0 +1,11 @@
+{#- Search page: Sphinx's own, with the form swapped for a Carbon search field. -#}
+{%- extends "basic/search.html" %}
+
+{%- block searchbox %}
+  <form class="carbon-search-form" action="" method="get">
+    {%- with search_id = "carbon-search-page-input" %}
+    {%- include "partials/search-field.html" %}
+    {%- endwith %}
+  </form>
+  <p id="search-progress" class="carbon-search-progress"></p>
+{%- endblock %}

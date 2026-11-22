@@ -1,0 +1,152 @@
+// Admonitions rendered like Carbon low-contrast inline notifications, using
+// Carbon's notification tokens and status icons.
+
+@use 'sass:list';
+@use 'sass:map';
+@use '@carbon/styles/scss/theme' as *;
+@use '@carbon/styles/scss/type';
+@use '@carbon/styles/scss/spacing' as *;
+@use 'carbon-icons' as icons;
+
+// kind => (status token, notification background token, icon)
+$-kinds: (
+  info: ('support-info', 'notification-background-info', 'information--filled'),
+  success: ('support-success', 'notification-background-success', 'idea'),
+  warning: ('support-warning', 'notification-background-warning', 'warning--alt--filled'),
+  error: ('support-error', 'notification-background-error', 'error--filled'),
+);
+
+// Sphinx/docutils admonition class => kind
+$-admonitions: (
+  admonition: info,
+  note: info,
+  seealso: info,
+  todo: info,
+  hint: success,
+  tip: success,
+  important: warning,
+  attention: warning,
+  caution: warning,
+  warning: warning,
+  danger: error,
+  error: error,
+);
+
+@mixin -kind($kind) {
+  $spec: map.get($-kinds, $kind);
+
+  --carbon-admonition-accent: var(--cds-#{list.nth($spec, 1)});
+  --carbon-admonition-background: var(--cds-#{list.nth($spec, 2)});
+  --carbon-admonition-icon: #{map.get(icons.$icons, list.nth($spec, 3))};
+}
+
+.carbon-article {
+  div.admonition,
+  aside.admonition {
+    @include -kind(info);
+    @include type.type-style('body-compact-01');
+
+    position: relative;
+    padding: $spacing-05 $spacing-05 $spacing-05 calc(#{$spacing-05} * 2 + 1.25rem);
+    border: 1px solid color-mix(in srgb, var(--carbon-admonition-accent) 40%, transparent);
+    border-inline-start: 3px solid var(--carbon-admonition-accent);
+    margin: 0 0 $spacing-06;
+    background: var(--carbon-admonition-background);
+    color: $text-primary;
+
+    &::before {
+      position: absolute;
+      top: $spacing-05;
+      left: calc(#{$spacing-05} - 3px + 1px);
+      width: 1.25rem;
+      height: 1.25rem;
+      background-color: var(--carbon-admonition-accent);
+      content: '';
+      mask: var(--carbon-admonition-icon) center / contain no-repeat;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+
+    > p:not(.admonition-title) {
+      margin-bottom: $spacing-03;
+    }
+
+    // Nested code blocks and tables sit on the notification background.
+    .highlight,
+    table.docutils td {
+      background: $layer-01;
+    }
+  }
+
+  p.admonition-title {
+    @include type.type-style('heading-compact-01');
+
+    margin: 0 0 $spacing-02;
+
+    &::after {
+      content: none;
+    }
+  }
+
+  @each $name, $kind in $-admonitions {
+    .admonition.#{$name} {
+      @include -kind($kind);
+    }
+  }
+
+  // versionadded / versionchanged / deprecated / versionremoved
+  div:is(.versionadded, .versionchanged, .deprecated, .versionremoved) {
+    @include type.type-style('body-compact-01');
+
+    padding: $spacing-03 $spacing-05;
+    border-inline-start: 3px solid $support-info;
+    margin-bottom: $spacing-05;
+    background: $layer-01;
+
+    > p {
+      margin: 0;
+    }
+  }
+
+  div.versionadded {
+    border-inline-start-color: $support-success;
+  }
+
+  div:is(.deprecated, .versionremoved) {
+    border-inline-start-color: $support-warning;
+  }
+
+  span.versionmodified {
+    font-weight: 600;
+  }
+
+  // Sidebars and topics.
+  aside.sidebar,
+  div.sidebar {
+    padding: $spacing-05;
+    border: 0;
+    margin: 0 0 $spacing-05 $spacing-05;
+    background: $layer-01;
+
+    .sidebar-title {
+      @include type.type-style('heading-compact-02');
+    }
+  }
+
+  aside.topic,
+  div.topic,
+  nav.contents {
+    padding: $spacing-05;
+    border: 0;
+    margin-bottom: $spacing-06;
+    background: $layer-01;
+
+    .topic-title {
+      @include type.type-style('heading-compact-02');
+
+      margin-bottom: $spacing-03;
+    }
+  }
+}

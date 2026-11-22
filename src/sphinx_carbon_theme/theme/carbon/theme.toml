@@ -1,0 +1,41 @@
+[theme]
+inherit = "basic"
+stylesheets = [
+    "fonts/plex.css",
+    "styles/carbon-sphinx.css",
+]
+# The theme renders its own navigation; html_sidebars is not used.
+sidebars = []
+# Syntax colours come from the theme stylesheet (Carbon palette).
+pygments_style = { default = "none" }
+
+[options]
+# Carbon theme zone for light mode: "white" or "g10".
+light_theme = "white"
+# Carbon theme zone for dark mode: "g90" or "g100".
+dark_theme = "g100"
+# Text shown before the project name in the header, e.g. "IBM".
+header_prefix = ""
+# Links in the header: a list of {"name": ..., "url": ...} dicts.
+header_links = ""
+# URL of the source repository; shows a GitHub icon in the header.
+repository_url = ""
+# Only render the navigation branch of the current page (for huge sites).
+navigation_collapse = "false"
+# Maximum depth of the side navigation (-1: unlimited).
+navigation_depth = "-1"
+# Include hidden toctrees (":hidden:") in the side navigation.
+navigation_include_hidden = "true"
+# Show the "On this page" table of contents on wide screens.
+show_toc = "true"
+# Heading levels below the page title shown there: 1 (sections only, like the
+# Carbon website), 2 or 3.
+toc_depth = "1"
+# Show breadcrumbs above the page title.
+show_breadcrumbs = "true"
+# Show previous/next page links at the bottom of each page.
+show_prev_next = "true"
+
+# Options inherited from "basic", neutralised: the theme does its own layout.
+body_min_width = "0"
+body_max_width = "none"
